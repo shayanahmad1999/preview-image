@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Overlay with Upload and Preview</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #f4f4f4;
+      min-height: 100vh;
+    }
+
+    .design-area {
+      position: relative;
+      width: 400px;
+      height: 300px;
+      border: 1px solid #ccc;
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .upload-btn {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .overlay-text {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 20px;
+      text-shadow: 1px 1px 2px black;
+      font-weight: bold;
+      text-align: center;
+      cursor: text;
+    }
+
+    #previewBtn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #previewArea {
+      width: 400px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="design-area" id="designArea">
+    <div class="overlay-text" contenteditable="true" id="overlayText">Your Text Here</div>
+    <button class="upload-btn" id="uploadBtn">Upload Image</button>
+    <input type="file" id="imageUpload" style="display: none;">
+  </div>
+
+  <button id="previewBtn">Show Preview</button>
+
+  <div id="previewArea"></div>
+
+  <script>
+    const designArea = document.getElementById('designArea');
+    const imageUpload = document.getElementById('imageUpload');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const overlayText = document.getElementById('overlayText');
+    const previewBtn = document.getElementById('previewBtn');
+    const previewArea = document.getElementById('previewArea');
+
+    // Handle image upload
+    uploadBtn.addEventListener('click', () => {
+      imageUpload.click();
+    });
+
+    imageUpload.addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          designArea.style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handle preview
+    previewBtn.addEventListener('click', () => {
+      const clone = designArea.cloneNode(true);
+      const uploadBtnClone = clone.querySelector('.upload-btn');
+      if (uploadBtnClone) {
+        uploadBtnClone.remove();
+      }
+      previewArea.innerHTML = '';
+      previewArea.appendChild(clone);
+    });
+  </script>
+
+</body>
+</html>
